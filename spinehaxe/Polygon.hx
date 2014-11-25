@@ -31,7 +31,7 @@ package spinehaxe;
 
 class Polygon {
 
-	public var vertices : Vector<Float>;
+	public var vertices : Array<Float>;
 	/** Returns true if the polygon contains the point. */	public function containsPoint(x : Float, y : Float) : Bool {
 		var nn : Int = vertices.length;
 		var prevIndex : Int = nn - 2;
@@ -81,7 +81,7 @@ class Polygon {
 
 
 	public function new() {
-		vertices = new Vector<Float>();
+		vertices = new Array<Float>();
 	}
 }
 
