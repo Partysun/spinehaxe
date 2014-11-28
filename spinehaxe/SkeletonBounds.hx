@@ -1,10 +1,10 @@
 /******************************************************************************
  * Spine Runtimes Software License
  * Version 2.1
- * 
+ *
  * Copyright (c) 2013, Esoteric Software
  * All rights reserved.
- * 
+ *
  * You are granted a perpetual, non-exclusive, non-sublicensable and
  * non-transferable license to install, execute and perform the Spine Runtimes
  * Software (the "Software") solely for internal use. Without the written
@@ -15,7 +15,7 @@
  * trademark, patent or other intellectual property or proprietary rights
  * notices on or in the Software, including any copy thereof. Redistributions
  * in binary or source form must include this license and terms.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
@@ -32,49 +32,52 @@ package spinehaxe;
 
 import spinehaxe.attachments.Attachment;
 import spinehaxe.attachments.BoundingBoxAttachment;
+import spinehaxe.Polygon;
 
 class SkeletonBounds {
-	public var width(getWidth, never) : Float;
-	public var height(getHeight, never) : Float;
+	public var width(get, never):Float;
+	public var height(get, never):Float;
 
-	var polygonPool : Array<Polygon>;
-	public var boundingBoxes : Array<BoundingBoxAttachment>;
-	public var polygons : Array<Polygon>;
-	public var minX : Float;
-	public var minY : Float;
-	public var maxX : Float;
-	public var maxY : Float;
+	public var boundingBoxes:Array<BoundingBoxAttachment>;
+	public var polygons:Array<Polygon>;
+
+	public var minX:Float;
+	public var minY:Float;
+	public var maxX:Float;
+	public var maxY:Float;
+
+	private var polygonPool:Array<Polygon>;
+
+	public function new() {
+		polygonPool = new Array<Polygon>();
+		boundingBoxes = new Array<BoundingBoxAttachment>();
+		polygons = new Array<Polygon>();
+	}
+
 	public function update(skeleton : Skeleton, updateAabb : Bool) : Void {
 		var slots : Array<Slot> = skeleton.slots;
 		var slotCount : Int = slots.length;
 		var x : Float = skeleton.x;
 		var y : Float = skeleton.y;
-		boundingBoxes.length = 0;
-		for (polygon in polygons/* AS3HX WARNING could not determine type for var: polygon exp: EIdent(polygons) type: Vector<Polygon>*/)
-			polygonPool[polygonPool.length] = polygon;
-		polygons.length = 0;
-		var i : Int = 0;
-		while(i < slotCount) {
+    boundingBoxes = new Array<BoundingBoxAttachment>();
+		for (polygon in polygons)
+      polygonPool.push(polygon);
+    polygons = new Array<Polygon>();
+
+		for (i in 0...slotCount) {
 			var slot : Slot = slots[i];
-			var boundingBox : BoundingBoxAttachment = try cast(slot.attachment, BoundingBoxAttachment) catch(e:Dynamic) null;
+			var boundingBox:BoundingBoxAttachment = try cast(slot.attachment, BoundingBoxAttachment) catch(e:Dynamic) null;
 			if (boundingBox == null)
-				 {
-				i++;
 				continue;
-			}
 
-			boundingBoxes[boundingBoxes.length] = boundingBox;
-			var poolCount : Int = polygonPool.length;
-			if (poolCount > 0) {
-				polygon = polygonPool[poolCount - 1];
-				polygonPool.splice(poolCount - 1, 1);
-			}
-
+      boundingBoxes.push(boundingBox);
+      var polygon:Polygon;
+      if (polygonPool.length > 0)
+          polygon = polygonPool.pop();
 			else polygon = new Polygon();
-			polygons[polygons.length] = polygon;
-			polygon.vertices.length = boundingBox.vertices.length;
+
+			polygons.push(polygon);
 			boundingBox.computeWorldVertices(x, y, slot.bone, polygon.vertices);
-			i++;
 		}
 		if (updateAabb)
 			aabbCompute();
@@ -83,8 +86,8 @@ class SkeletonBounds {
 	function aabbCompute() : Void {
 		var minX : Float = spinehaxe.MathUtils.MAX_INT;
 		var minY : Float = spinehaxe.MathUtils.MAX_INT;
-		var maxX : Float = spinehaxe.MathUtils.MAX_INT;
-		var maxY : Float = spinehaxe.MathUtils.MAX_INT;
+		var maxX : Float = -100000;
+		var maxY : Float = -100000;
 		var i : Int = 0;
 		var n : Int = polygons.length;
 		while(i < n) {
@@ -166,22 +169,17 @@ class SkeletonBounds {
 	}
 
 	public function getPolygon(attachment : BoundingBoxAttachment) : Polygon {
-		var index : Int = ArrayUtils.indexOf(boundingBoxes, attachment);
+		var index : Int = boundingBoxes.indexOf(attachment);
 		return index == -(1) ? null : polygons[index];
 	}
 
-	public function getWidth() : Float {
+	private function get_width() : Float {
 		return maxX - minX;
 	}
 
-	public function getHeight() : Float {
+	private function get_height() : Float {
 		return maxY - minY;
 	}
 
-	public function new() {
-		polygonPool = new Array<Polygon>();
-		boundingBoxes = new Array<BoundingBoxAttachment>();
-		polygons = new Array<Polygon>();
-	}
-}
 
+}

@@ -32,7 +32,14 @@ package spinehaxe;
 class Polygon {
 
 	public var vertices : Array<Float>;
-	/** Returns true if the polygon contains the point. */	public function containsPoint(x : Float, y : Float) : Bool {
+	
+	public function new()
+	{
+		vertices = new Array<Float>();
+	}
+	
+	/** Returns true if the polygon contains the point. */	
+	public function containsPoint(x : Float, y : Float) : Bool {
 		var nn : Int = vertices.length;
 		var prevIndex : Int = nn - 2;
 		var inside : Bool = false;
@@ -51,7 +58,8 @@ class Polygon {
 		return inside;
 	}
 
-	/** Returns true if the polygon contains the line segment. */	public function intersectsSegment(x1 : Float, y1 : Float, x2 : Float, y2 : Float) : Bool {
+	/** Returns true if the polygon contains the line segment. */	
+	public function intersectsSegment(x1 : Float, y1 : Float, x2 : Float, y2 : Float) : Bool {
 		var nn : Int = vertices.length;
 		var width12 : Float = x1 - x2;
 		var height12 : Float = y1 - y2;
@@ -78,10 +86,4 @@ class Polygon {
 		}
 		return false;
 	}
-
-
-	public function new() {
-		vertices = new Array<Float>();
-	}
 }
-

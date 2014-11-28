@@ -30,16 +30,17 @@
 package spinehaxe.attachments;
 
 import spinehaxe.Bone;
-import haxe.ds.Vector;
 
 class BoundingBoxAttachment extends Attachment {
+
 	public var vertices:Array<Float>;
+	
 	public function new(name:String) {
-		vertices = new Array<Float>();
-		super(name);
+    super(name);
+    vertices = new Array<Float>();
 	}
 
-	public function computeWorldVertices(x:Float, y:Float, bone:Bone, worldVertices:Vector<Float>):Void {
+	public function computeWorldVertices(x:Float, y:Float, bone:Bone, worldVertices:Array<Float>):Void {
 		x += bone.worldX;
 		y += bone.worldY;
 		var m00:Float = bone.m00;
@@ -57,6 +58,4 @@ class BoundingBoxAttachment extends Attachment {
 			i += 2;
 		}
 	}
-
 }
-

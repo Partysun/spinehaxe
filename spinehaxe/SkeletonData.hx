@@ -32,7 +32,7 @@ package spinehaxe;
 
 import spinehaxe.animation.Animation;
 import spinehaxe.Exception;
-import haxe.ds.Vector;
+import openfl.Vector;
 
 class SkeletonData {
 
@@ -154,10 +154,8 @@ class SkeletonData {
 	// ---
 
 	public function toString():String {
-		return name != (null) ? name : ("" + this);
+		return (name != null) ? name : ("" + this);
 	}
-
 
 	public function new() {}
 }
-
