@@ -36,6 +36,10 @@ class SlotData {
 	public var name:String;
 	public var boneData:BoneData;
 	public var color:Color = Color.WHITE;
+    public var r:Float = 0;
+	public var g:Float = 0;
+	public var b:Float = 0;
+	public var a:Float = 0;
 	public var attachmentName:String;
 	public var additiveBlending:Bool;
 
