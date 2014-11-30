@@ -35,6 +35,7 @@ import spinehaxe.attachments.BoundingBoxAttachment;
 import spinehaxe.Polygon;
 
 class SkeletonBounds {
+
 	public var width(get, never):Float;
 	public var height(get, never):Float;
 
@@ -61,14 +62,16 @@ class SkeletonBounds {
 		var y : Float = skeleton.y;
     boundingBoxes = new Array<BoundingBoxAttachment>();
 		for (polygon in polygons)
-      polygonPool.push(polygon);
+			polygonPool[polygonPool.length] = polygon;
     polygons = new Array<Polygon>();
 
 		for (i in 0...slotCount) {
 			var slot : Slot = slots[i];
 			var boundingBox:BoundingBoxAttachment = try cast(slot.attachment, BoundingBoxAttachment) catch(e:Dynamic) null;
 			if (boundingBox == null)
+			{
 				continue;
+			}
 
       boundingBoxes.push(boundingBox);
       var polygon:Polygon;
@@ -183,3 +186,4 @@ class SkeletonBounds {
 
 
 }
+
